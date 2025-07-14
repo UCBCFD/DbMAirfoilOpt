@@ -1,10 +1,10 @@
 # AirDbM
 
-This public repository accompanies our latest manuscript **"Airfoil Optimization using Design-by-Morphing with Minimized Design-Space Dimensionality"**.
+This public repository accompanies our research article **"Airfoil Optimization using Design-by-Morphing with Minimized Design-Space Dimensionality"**.
 
 It extends our 2023 release in the *Journal of Computational Design and Engineering* ([https://doi.org/10.1093/jcde/qwad059](https://doi.org/10.1093/jcde/qwad059)) by introducing **AirDbM**, a compact 12-baseline implementation of Design-by-Morphing (DbM) that preserves geometric diversity while halving the number of design variables.
 
-## Abstract
+## Description
 
 Design-by-Morphing (DbM) offers rich shape variation with few parameters, yet its efficiency hinges on the size of the baseline set. **AirDbM** systematically selects 12 representative airfoils from the 1,600-shape UIUC database via a forward-search baseline selection that maximizes reconstruction capability.
 
