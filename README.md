@@ -15,7 +15,7 @@ With these baselines, AirDbM:
 
 ## Materials
 
-* Preprint: *[link-to-be-added-after-acceptance]*
+* Paper: *[link-to-be-added-after-acceptance]*
 * Data: See `GAOutput_MO.mat` in this repository (MATLAB-compatible format)
 
 > The 2023 article *"Airfoil Optimization using Design-by-Morphing"* is available at [https://doi.org/10.1093/jcde/qwad059](https://doi.org/10.1093/jcde/qwad059).
