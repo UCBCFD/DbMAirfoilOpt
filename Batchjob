@@ -1,28 +1,166 @@
 #!/bin/bash
 
-#SBATCH --job-name="Airfoils"
-#SBATCH --partition=compute
-#SBATCH --nodes=1
-#SBATCH --ntasks-per-node=128
-#SBATCH --cpus-per-task=1
-#SBATCH --mem=249325M
-#SBATCH -t 48:00:00
-#SBATCH --export=ALL
-#SBATCH --account=ucb198
-#SBATCH --output="Airfoils.%j.%N.out"
-module purge 
-module load cpu
-module load slurm
-module load matlab/2020b
+#--------------------------------------------------------------------------
+# SLURM Directives
+#--------------------------------------------------------------------------
+#SBATCH --job-name="AirfoilOpt"       # Job name
+#SBATCH --partition=shared            # Anvil's shared partition is suitable for 128-core jobs
+#SBATCH --nodes=1                     # Run on a single node
+#SBATCH --ntasks=128                  # Run one MATLAB instance (task) on the node
+#SBATCH --cpus-per-task=1             # Allocate 128 CPU cores to that single task
+#SBATCH -t 54:00:00                   # Wall time limit (DD-HH:MM:SS or HH:MM:SS), 48 hours
+#SBATCH --export=ALL                  # Export all current environment variables to the job
+#SBATCH --account=phy250071           # Your specific account (taken from your example)
+#SBATCH --output="../AirfoilOpt_job_%j.out"  # Standard output file (%j expands to Job ID)
+#SBATCH --error="../AirfoilOpt_job_%j.err"   # Standard error file
 
-cp -rf /home/$USER/scratch/airopt_ucb_cfd-main/ /scratch/$USER/job_$SLURM_JOB_ID/
+#--------------------------------------------------------------------------
+# Job Information
+#--------------------------------------------------------------------------
+echo "========================================================"
+echo "SLURM Job Information"
+echo "========================================================"
+echo "Job ID: $SLURM_JOB_ID"
+echo "Job Name: $SLURM_JOB_NAME"
+echo "Running on host: $(hostname)"
+echo "Allocated Cores: $SLURM_CPUS_PER_TASK"
+echo "Allocated Memory: ${SLURM_MEM_PER_NODE}M (approx)" # SLURM_MEM_PER_NODE is in MB if --mem is set
+echo "Working Directory: $(pwd)"
+echo "SLURM Submission Directory: $SLURM_SUBMIT_DIR"
+echo "Start Time: $(date)"
+echo "========================================================"
+echo
 
-cd /scratch/$USER/job_$SLURM_JOB_ID/airopt_ucb_cfd-main
+#--------------------------------------------------------------------------
+# Define Paths
+#--------------------------------------------------------------------------
+# Source directory for your project in your home directory
+# Assumes your project "airopt_ucb_cfd-main" is directly in your home or a subdirectory like "scratch"
+# Adjust SOURCE_PROJECT_ROOT if your project is deeper, e.g., $HOME/scratch
+SOURCE_PROJECT_ROOT="$HOME"
+PROJECT_NAME="AirOptDbMAf12"
+FULL_SOURCE_PATH="$SOURCE_PROJECT_ROOT/$PROJECT_NAME"
 
-matlab -batch "run('AirOptimizer.m');exit;" 2>&1 | tee log # Change this line
+# Scratch directory on Anvil for this job
+SCRATCH_BASE="/anvil/scratch/$USER"
+JOB_SCRATCH_DIR="${SCRATCH_BASE}/AirfoilOpt_job_${SLURM_JOB_ID}"
 
-cd ..
+# Final results directory in your home directory
+FINAL_RESULTS_ROOT="$HOME/AirfoilOpt_Results"
+FINAL_JOB_RESULTS_DIR="${FINAL_RESULTS_ROOT}/job_${SLURM_JOB_ID}"
 
-# Move the log file
-mv ./airopt_ucb_cfd-main ./AirOptOut
-cp -r ./* /home/$USER/scratch/airopt_ucb_cfd-main/
+#--------------------------------------------------------------------------
+# Prepare Environment and Working Directory
+#--------------------------------------------------------------------------
+echo "Preparing job environment and directories..."
+
+# Create job-specific scratch directory
+mkdir -p "$JOB_SCRATCH_DIR"
+if [ ! -d "$JOB_SCRATCH_DIR" ]; then
+    echo "Error: Could not create job scratch directory: $JOB_SCRATCH_DIR" >&2
+    exit 1
+fi
+
+# Copy project files to the job's scratch directory
+echo "Copying project files from $FULL_SOURCE_PATH to $JOB_SCRATCH_DIR ..."
+cp -r "$FULL_SOURCE_PATH" "$JOB_SCRATCH_DIR/"
+
+# Define the actual working directory where the code will run
+WORK_DIR="$JOB_SCRATCH_DIR/$PROJECT_NAME"
+
+# Load necessary modules
+echo "Loading modules..."
+module purge                         # Clear any inherited modules
+module load cpu                      # From your example, often for selecting CPU environment/toolchain
+module load matlab/R2023a            # Specify MATLAB version (adjust if needed)
+# List loaded modules for verification in the output log
+echo "Loaded modules:"
+module list
+echo
+
+#--------------------------------------------------------------------------
+# Execute MATLAB Optimizer
+#--------------------------------------------------------------------------
+echo "Changing to working directory: $WORK_DIR"
+cd "$WORK_DIR"
+if [ "$PWD" != "$WORK_DIR" ]; then
+    echo "Error: Failed to change to working directory: $WORK_DIR" >&2
+    # Attempt to copy back what we have so far if dir change fails
+    mkdir -p "$FINAL_JOB_RESULTS_DIR"
+    echo "Attempting to copy files from $JOB_SCRATCH_DIR to $FINAL_JOB_RESULTS_DIR before exiting due to cd error." >&2
+    cp -r "$JOB_SCRATCH_DIR"/* "$FINAL_JOB_RESULTS_DIR/" 2>/dev/null || true
+    exit 1
+fi
+
+echo "Running MATLAB script 'AirOptimizer.m'..."
+echo "Output will be logged to matlab_run.log and SLURM output files."
+
+# Set OMP_NUM_THREADS for underlying multithreaded libraries (e.g., MKL in MATLAB)
+# MATLAB's Parallel Computing Toolbox (parpool) manages its workers based on SLURM_CPUS_PER_TASK.
+export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
+
+# Run MATLAB in batch mode.
+# -nodisplay: Essential for jobs without a display.
+# -batch: Runs the MATLAB script non-interactively and exits MATLAB after completion.
+# Output (stdout & stderr) from MATLAB is redirected to 'matlab_run.log'.
+matlab -nodisplay -batch "try; run('AirOptimizer.m'); catch e; fprintf(2, 'MATLAB Error: %s\n', e.message); for i=1:length(e.stack); fprintf(2, 'File: %s, Name: %s, Line: %d\n', e.stack(i).file, e.stack(i).name, e.stack(i).line); end; exit(1); end; exit(0);" > matlab_run.log 2>&1
+
+MATLAB_EXIT_CODE=$?
+echo "MATLAB script execution finished with exit code: $MATLAB_EXIT_CODE"
+if [ $MATLAB_EXIT_CODE -ne 0 ]; then
+    echo "Warning: MATLAB script exited with a non-zero status."
+    # Continue to copy results back regardless of MATLAB exit status
+fi
+echo
+
+#--------------------------------------------------------------------------
+# Retrieve Results
+#--------------------------------------------------------------------------
+echo "Preparing to copy results back..."
+
+# Create the final results directory in your home space
+mkdir -p "$FINAL_JOB_RESULTS_DIR"
+if [ ! -d "$FINAL_JOB_RESULTS_DIR" ]; then
+    echo "Error: Could not create final results directory: $FINAL_JOB_RESULTS_DIR" >&2
+    # Attempt to store results in a fallback location if primary results dir fails
+    FALLBACK_RESULTS_DIR="$HOME/AirfoilOpt_job_${SLURM_JOB_ID}_fallback_results"
+    mkdir -p "$FALLBACK_RESULTS_DIR"
+    echo "Copying entire job scratch directory $JOB_SCRATCH_DIR to $FALLBACK_RESULTS_DIR ..."
+    cp -r "$JOB_SCRATCH_DIR" "$FALLBACK_RESULTS_DIR/"
+    exit 1 # Exit after attempting fallback copy
+fi
+
+# Copy the entire working directory (which includes source, matlab_run.log, and any output files
+# generated by AirOptimizer.m) from scratch to the final results directory.
+echo "Copying contents of $WORK_DIR to $FINAL_JOB_RESULTS_DIR ..."
+cp -r "$WORK_DIR"/* "$FINAL_JOB_RESULTS_DIR/"
+# If you prefer to copy the WORK_DIR itself as a subdirectory into FINAL_JOB_RESULTS_DIR:
+# cp -r "$WORK_DIR" "$FINAL_JOB_RESULTS_DIR/"
+
+# Example of copying specific files/folders if preferred:
+# echo "Copying specific files..."
+# cp "$WORK_DIR/matlab_run.log" "$FINAL_JOB_RESULTS_DIR/"
+# if [ -d "$WORK_DIR/my_optimizer_outputs" ]; then
+#   cp -r "$WORK_DIR/my_optimizer_outputs" "$FINAL_JOB_RESULTS_DIR/"
+# fi
+
+echo "Results copied to $FINAL_JOB_RESULTS_DIR"
+echo
+
+#--------------------------------------------------------------------------
+# Cleanup
+#--------------------------------------------------------------------------
+echo "Cleaning up scratch directory: $JOB_SCRATCH_DIR ..."
+rm -rf "$JOB_SCRATCH_DIR"
+echo "Scratch directory cleaned."
+echo
+
+#--------------------------------------------------------------------------
+# Job Completion
+#--------------------------------------------------------------------------
+echo "========================================================"
+echo "Job End Time: $(date)"
+echo "SLURM Job $SLURM_JOB_ID finished."
+echo "========================================================"
+
+exit 0

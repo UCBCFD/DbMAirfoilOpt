@@ -1,4 +1,4 @@
-function [V]=Panelling(V,n_seg_max)
+function [V] = panelling(V,n_seg_max)
 
 % clc;
 % close all;

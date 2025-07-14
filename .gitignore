@@ -1,21 +1,25 @@
 # old codes
 /legacy
+
+# virtualenv
+/venv
+
 # XFOIL inheritance
-/Airfoil/xfoil
-!/Airfoil/xfoil_*
-/Airfoil/XFOIL/*
-!/Airfoil/XFOIL/xfoilInput.input
+/airfoilEval/XFOIL/*
+!/airfoilEval/XFOIL/xfoilInput.input
+
 # image extensions
 *.eps
 *.png
 *.fig
+
 # archives/misc
 *.pdf
 *.rar
 *.exe
-!InitialGen.txt
 paper*
 xfoil*
 *.bl
 log*
 **.ini
+**.pyc
