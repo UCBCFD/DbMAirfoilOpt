@@ -25,6 +25,6 @@ With these baselines, AirDbM:
 If you use this repository, please cite:
 
 - Lee, S. & Sheikh, H. M. (2025). *Airfoil optimization using Design-by-Morphing with minimized design-space dimensionality*. Manuscript in preparation (DOI and journal information will be updated upon publication).
-- Sheikh, H. M., Lee, S., Wang, J., & Marcus, P. S. (2023). Airfoil optimization using Design-by-Morphing. *Journal of Computational Design and Engineering*, 10(4), 1443–1459.
+- Sheikh, H. M., Lee, S., Wang, J., & Marcus, P. S. (2023). Airfoil optimization using Design-by-Morphing. *Journal of Computational Design and Engineering*, 10(4), 1443–1459. doi:10.1093/jcde/qwad059.
 
 ---
