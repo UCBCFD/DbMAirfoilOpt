@@ -1,0 +1,13 @@
+PLOP
+G F
+
+load XFOIL/morphed_repanel.txt
+pcop
+oper
+iter 50
+visc 1e6
+seqp
+pacc
+./XFOIL/xfoilSave.txt
+./XFOIL/xfoilDump
+aseq 7.25 15 0.25

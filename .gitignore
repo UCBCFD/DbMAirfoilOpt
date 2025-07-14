@@ -13,12 +13,13 @@
 *.png
 *.fig
 
-# archives/misc
+# archives
 *.pdf
 *.rar
 *.exe
 paper*
-xfoil*
+
+# misc
 *.bl
 log*
 **.ini
