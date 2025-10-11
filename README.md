@@ -13,6 +13,18 @@ With these baselines, AirDbM:
 * Accelerates multi-objective optimization, achieving a Pareto front with larger hypervolume and higher lift-to-drag ratios at moderate stall tolerance;
 * Demonstrates high adaptability for reinforcement-learning agents, outperforming classical parameterizations (CST, Hicks–Henne, NURBS, PARSEC) in both learning speed and final accuracy.
 
+## How to Run
+
+To run the airfoil optimization code:
+
+1. Ensure MATLAB is installed on your system.
+2. Add all directories and subdirectories of this repository to your MATLAB path.
+3. Run the `AirOptimizer.m` script to start the optimization process.
+
+### XFOIL Compatibility Notice
+
+The `xfoil` executable included in the `airfoilEval/` directory has been compiled for Linux systems and is confirmed to work on Linux. If you are using a different operating system (e.g., Windows or macOS) and the executable does not run, you may need to compile your own XFOIL executable from source. Instructions for compiling XFOIL can be found in the official XFOIL documentation.
+
 ## Materials
 
 * Paper: *[link to be added after acceptance]*  
