@@ -21,9 +21,7 @@ To run the airfoil optimization code:
 2. Add all directories and subdirectories of this repository to your MATLAB path.
 3. Run the `AirOptimizer.m` script to start the optimization process.
 
-### XFOIL Compatibility Notice
-
-The `xfoil` executable included in the `airfoilEval/` directory has been compiled for Linux systems and is confirmed to work on Linux. If you are using a different operating system (e.g., Windows or macOS) and the executable does not run, you may need to compile your own XFOIL executable from source. Instructions for compiling XFOIL can be found in the official XFOIL documentation.
+The `xfoil` executable is for Linux systems and is confirmed to work on Linux. If you are using a different operating system (e.g., Windows or macOS) and/or the executable does not run, you may need to compile your own XFOIL executable from source. Instructions for compiling XFOIL can be found on the [official XFOIL website](https://web.mit.edu/drela/Public/web/xfoil/).
 
 ## Materials
 
