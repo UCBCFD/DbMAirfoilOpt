@@ -61,7 +61,6 @@ if __name__ == "__main__":
         "RONCZ R1145MS MAIN ELEMENT", "S9104", "SARATOV AIRFOIL"
     ]
 
-    python_baselines = load_python_12_baselines(dbm_baseline_names_python)
     if not python_baselines or len(python_baselines) != 12:
         print("Python Error: Failed to load the 12 baselines correctly.", file=sys.stderr)
         sys.exit(1)
