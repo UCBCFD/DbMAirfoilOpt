@@ -26,7 +26,7 @@ The `xfoil` executable is for Linux systems and is confirmed to work on Linux. I
 ## Materials
 
 * Paper: *[link to be added after acceptance]*  
-* Data: See `GAOutput_MO.mat` in this repository (MATLAB-compatible format). Also see `airfoilDB/AirDbM_Reconstruct.txt` for the DbM weight sets used to reconstruct the UIUC database, along with their corresponding MAE values.
+* Data: See `GAOutput_MO.mat` in this repository (MATLAB-compatible format) for the optimization results. Also see `airfoilDB/AirDbM_Reconstruct.txt` for the DbM weight sets used to reconstruct the UIUC database, along with their corresponding MAE values.
 
 > The 2023 article *"Airfoil Optimization using Design-by-Morphing"* is available at [https://doi.org/10.1093/jcde/qwad059](https://doi.org/10.1093/jcde/qwad059).
 
