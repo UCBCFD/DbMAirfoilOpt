@@ -34,7 +34,7 @@ The `xfoil` executable is for Linux systems and is confirmed to work on Linux. I
 
 If you use this repository, please cite:
 
-- Lee, S. & Sheikh, H. M. (2025). *Airfoil Optimization using Design-by-Morphing with Minimized Design-Space Dimensionality*. *Journal of Computational Design and Engineering*. https://doi.org/10.1093/jcde/qwaf124
+- Lee, S. & Sheikh, H. M. (2026). *Airfoil Optimization using Design-by-Morphing with Minimized Design-Space Dimensionality*. *Journal of Computational Design and Engineering*, 13(1), 108-124. https://doi.org/10.1093/jcde/qwaf124
 - Sheikh, H. M., Lee, S., Wang, J., & Marcus, P. S. (2023). Airfoil Optimization using Design-by-Morphing. *Journal of Computational Design and Engineering*, 10(4), 1443–1459. https://doi.org/10.1093/jcde/qwad059
 
 ---
