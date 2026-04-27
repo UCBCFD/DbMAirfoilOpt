@@ -1,6 +1,6 @@
 # AirDbM
 
-> <kbd> Apr 27, 2026 </kbd> <br> Check out our latest release of the AirDbM **API** package on [AirDbM-API](https://github.com/jun9303/AirDbM-API) — ideal for integrating different optimizers into the AirDbM design scheme for benchmarks or new pipeline developments.
+> <kbd> Apr 27, 2026 </kbd> <br> Check out our latest release of the AirDbM **API** package on [AirDbM-API](https://github.com/jun9303/AirDbM-API) — native-Python, and ideal for integrating different optimizers into the AirDbM design scheme for benchmarks or new pipeline developments.
 
 This public repository accompanies our research article **"Airfoil Optimization using Design-by-Morphing with Minimized Design-Space Dimensionality"** ([https://doi.org/10.1093/jcde/qwaf124](https://doi.org/10.1093/jcde/qwaf124)).
 
