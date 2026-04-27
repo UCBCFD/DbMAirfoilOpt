@@ -1,5 +1,7 @@
 # AirDbM
 
+> <kbd> Apr 27, 2026 </kbd> <br> Check out our latest release of the AirDbM **API** package on [AirDbM-API](https://github.com/jun9303/AirDbM-API) — ideal for integrating different optimizers into the AirDbM design scheme for benchmarks or new pipeline developments.
+
 This public repository accompanies our research article **"Airfoil Optimization using Design-by-Morphing with Minimized Design-Space Dimensionality"** ([https://doi.org/10.1093/jcde/qwaf124](https://doi.org/10.1093/jcde/qwaf124)).
 
 It extends our 2023 release in the *Journal of Computational Design and Engineering* ([https://doi.org/10.1093/jcde/qwad059](https://doi.org/10.1093/jcde/qwad059)) by introducing **AirDbM**, a compact 12-baseline implementation of Design-by-Morphing (DbM) that preserves geometric diversity while halving the number of design variables.
